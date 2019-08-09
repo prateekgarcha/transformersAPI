@@ -63,11 +63,11 @@ public class TransformerService {
 
     public HashMap<String, String> getBattleResult(List<Integer> ids) {
 	HashMap<String, String> res = new HashMap<>();
-	if (ids.size() < 2) {
-	    res.put("Error", "2 or more ids required");
+	List<Transformer> transformers = repository.findAllById(ids);
+	if (transformers.size() < 2) {
+	    res.put("Error", "2 or more valid ids required");
 	    return res;
 	}
-	List<Transformer> transformers = repository.findAllById(ids);
 	List<Transformer> autobots = getTransfromersByTypeSortedByRank(
 		transformers, AUTOBOT);
 	List<Transformer> decepticons = getTransfromersByTypeSortedByRank(
@@ -188,8 +188,11 @@ public class TransformerService {
     private HashMap<String, String> getFinalResult(
 	    HashMap<String, Integer> battlesResult, List<Transformer> autobots,
 	    List<Transformer> decepticons) {
+
 	HashMap<String, String> result = new HashMap<>();
-	result.put("Winner", "Equal matches won by both teams");
+	result.put("Winner",
+		battlesResult.get("NumberOfBattles") == 0 ? "No battles fought"
+			: "Equal matches won by both teams");
 	result.put("NumberOfBattles",
 		battlesResult.get("NumberOfBattles").toString() + " battle");
 	result.put("HasGameBeenDestoryed",
@@ -197,20 +200,21 @@ public class TransformerService {
 
 	Transformer maxAutobot = getMaxTransformer(autobots);
 	Transformer maxDecepticon = getMaxTransformer(decepticons);
-	String autobotsWon = "Winning team (" + autobotsStr + ") : "
-		+ maxAutobot.getName();
-	String decepticonsWon = "Winning team (" + decepticonsStr + ") : "
-		+ maxDecepticon.getName();
 
-	boolean equalMatchesWon = battlesResult
-		.get(autobotsStr) == battlesResult.get(decepticonsStr);
-	boolean autobotsWonGreaterMatches = battlesResult
-		.get(autobotsStr) > battlesResult.get(decepticonsStr);
-	boolean decepticonsWonGreaterMatches = battlesResult
-		.get(decepticonsStr) > battlesResult.get(autobotsStr);
 	// if game has not been destroyed, get the winning team name and the
 	// member of the winning team with the highest rating
 	if (maxAutobot != null && maxDecepticon != null) {
+	    String autobotsWon = "Winning team (" + autobotsStr + ") : "
+		    + maxAutobot.getName();
+	    String decepticonsWon = "Winning team (" + decepticonsStr + ") : "
+		    + maxDecepticon.getName();
+
+	    boolean equalMatchesWon = battlesResult
+		    .get(autobotsStr) == battlesResult.get(decepticonsStr);
+	    boolean autobotsWonGreaterMatches = battlesResult
+		    .get(autobotsStr) > battlesResult.get(decepticonsStr);
+	    boolean decepticonsWonGreaterMatches = battlesResult
+		    .get(decepticonsStr) > battlesResult.get(autobotsStr);
 	    if (equalMatchesWon) {
 		if (maxAutobot.getOverallRating() > maxDecepticon
 			.getOverallRating()) {

@@ -4,9 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -20,7 +22,7 @@ public class Transformer {
 	AUTOBOT, DECEPTICON
     }
 
-    private @Id @GeneratedValue int id;
+    private @Id @GeneratedValue @Setter(AccessLevel.NONE) int id;
     private String name;
     private int strength;
     private int intelligence;

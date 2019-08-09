@@ -147,12 +147,12 @@ public class ApiTest {
     @Test
     public void findWinnerFromTransformersBattleWithLessThan2Ids()
 	    throws Exception {
-	String[] ids = new String[] { "4" };
+	String[] ids = new String[] { "12","4" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
 		.content(asJsonString(ids)).contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.content.Error")
-			.value("2 or more ids required"));
+			.value("2 or more valid ids required"));
 
     }
 
