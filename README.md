@@ -3,10 +3,10 @@ Steps to test the application
 **Prerequists:- java and maven should be installed previously.
 
 1. git clone https://github.com/prateek0227/transformersAPI.git
-2. mvn spring-boot:run - this will start the application at localhost:8080
-3. go to http://localhost:8080/swagger-ui.html#!/transformer-controller to test the apis from the browser
+2. `mvn spring-boot:run` - this will start the application at `localhost:8080`
+3. go to `http://localhost:8080/swagger-ui.html#!/transformer-controller` to test the apis from the browser
 
-#Main application file - ApiApplication.java
+> Main application file - `ApiApplication.java`
 
 Following APIs are present
 1. GET /transformers - get a list of all the saved transformers. Initially there are 5 pre loaded transformers.
@@ -16,6 +16,7 @@ Following APIs are present
 5. DELETE /transformers/{id} - delete a transformer by id
 6. POST /getBattleResult - get the result of the battle by passing in valid transformer ids as a list.
 
-To run unit and integration tests run the following command - mvn clean test
-#Unit Test file - ApiTest.java
-#Integration Test file - ServiceUnitTests.java
+To run unit and integration tests run the following command - `mvn clean test`
+
+> Unit Test file - `ServiceUnitTests.java`
+> Integration Test file - `ApiTest.java`
