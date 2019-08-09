@@ -85,14 +85,16 @@ public class ApiTest {
 		.andExpect(MockMvcResultMatchers.jsonPath("$.type")
 			.value(Transformer.TYPE.DECEPTICON.toString()));
     }
-    
+
     @Test
-    public void updateAlreadyExistingTransformerWithValidIdButInvalidData() throws Exception {
+    public void updateAlreadyExistingTransformerWithValidIdButInvalidData()
+	    throws Exception {
 	mockMvc.perform(MockMvcRequestBuilders.put("/transformers/1")
 		.content(asJsonString(new Transformer(1, "Evil Optimus Prime",
 			10, 16, 7, 9, 5, 2, 9, 7, Transformer.TYPE.DECEPTICON)))
 		.contentType(MediaType.APPLICATION_JSON)
-		.accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+		.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isBadRequest());
     }
 
     @DirtiesContext
@@ -171,6 +173,8 @@ public class ApiTest {
     @Test
     public void findWinnerFromTransformersBattleWithLessThan2Ids()
 	    throws Exception {
+	// only valid ids will be considered for a battle which have to be more
+	// than 2
 	String[] ids = new String[] { "12", "4" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
 		.content(asJsonString(ids))
