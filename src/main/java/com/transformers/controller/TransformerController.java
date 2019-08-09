@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
@@ -50,7 +52,7 @@ public class TransformerController {
     @PostMapping(value = "/transformers", produces = {
 	    MediaType.APPLICATION_JSON_VALUE })
     public Resource<Transformer> saveTransformer(
-	    @RequestBody Transformer transformer) {
+	    @RequestBody @Valid Transformer transformer) {
 	return assembler.toResource(service.createTransformer(transformer));
     }
 
@@ -59,7 +61,8 @@ public class TransformerController {
 	    MediaType.APPLICATION_JSON_VALUE })
     public Resource<Transformer> findTransformerById(@PathVariable Integer id) {
 	Transformer transformer = service.findById(id);
-	return assembler.toResource(transformer);
+	System.out.println(transformer);
+	return assembler.toResource(service.findById(id));
     }
 
     // update transformer info based on id
@@ -67,7 +70,7 @@ public class TransformerController {
     @PutMapping(value = "/transformers/{id}", produces = {
 	    MediaType.APPLICATION_JSON_VALUE })
     public Resource<Transformer> updateOrCreateTransformer(
-	    @RequestBody Transformer newTransformer, @PathVariable Integer id) {
+	    @RequestBody @Valid Transformer newTransformer, @PathVariable Integer id) {
 	newTransformer = service.updateOrCreateTransformer(newTransformer, id);
 	return assembler.toResource(newTransformer);
     }

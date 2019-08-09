@@ -1,5 +1,6 @@
 package com.transformers.api;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
@@ -44,6 +45,17 @@ public class ApiTest {
     }
 
     @Test
+    public void checkIfTransformerIsGettingSavedOrNotWithInvalidData()
+	    throws Exception {
+	mockMvc.perform(MockMvcRequestBuilders.post("/transformers")
+		.content(asJsonString(new Transformer(6, " ", 14, 6, 7, 9, 5, 2,
+			9, 7, Transformer.TYPE.AUTOBOT)))
+		.contentType(MediaType.APPLICATION_JSON)
+		.accept(MediaType.APPLICATION_JSON)).andDo(print())
+		.andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void getDetailsOfTransformerWithValidId() throws Exception {
 	mockMvc.perform(MockMvcRequestBuilders.get("/transformers/1")
 		.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
@@ -63,15 +75,24 @@ public class ApiTest {
     public void updateAlreadyExistingTransformerWithValidId() throws Exception {
 	mockMvc.perform(MockMvcRequestBuilders.put("/transformers/1")
 		.content(asJsonString(new Transformer(1, "Evil Optimus Prime",
-			10, 16, 7, 9, 5, 2, 9, 7, Transformer.TYPE.DECEPTICON)))
+			10, 6, 7, 9, 5, 2, 9, 7, Transformer.TYPE.DECEPTICON)))
 		.contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.name")
 			.value("Evil Optimus Prime"))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.intelligence")
-			.value(16))
+			.value(6))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.type")
 			.value(Transformer.TYPE.DECEPTICON.toString()));
+    }
+    
+    @Test
+    public void updateAlreadyExistingTransformerWithValidIdButInvalidData() throws Exception {
+	mockMvc.perform(MockMvcRequestBuilders.put("/transformers/1")
+		.content(asJsonString(new Transformer(1, "Evil Optimus Prime",
+			10, 16, 7, 9, 5, 2, 9, 7, Transformer.TYPE.DECEPTICON)))
+		.contentType(MediaType.APPLICATION_JSON)
+		.accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
     @DirtiesContext
@@ -96,7 +117,8 @@ public class ApiTest {
 	    throws Exception {
 	String[] ids = new String[] { "1", "2", "3", "4", "5" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
-		.content(asJsonString(ids)).contentType(MediaType.APPLICATION_JSON)
+		.content(asJsonString(ids))
+		.contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.content.Survivors")
 			.value("No survivors"))
@@ -113,7 +135,8 @@ public class ApiTest {
 	    throws Exception {
 	String[] ids = new String[] { "5", "3", "4" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
-		.content(asJsonString(ids)).contentType(MediaType.APPLICATION_JSON)
+		.content(asJsonString(ids))
+		.contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.content.Survivors")
 			.value("Survivors from losing team (AUTOBOTS): Bluestreak"))
@@ -132,7 +155,8 @@ public class ApiTest {
 	// only 2 transformers will fight i.e. 3 & 4
 	String[] ids = new String[] { "15", "3", "4" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
-		.content(asJsonString(ids)).contentType(MediaType.APPLICATION_JSON)
+		.content(asJsonString(ids))
+		.contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.content.Survivors")
 			.value("No survivors"))
@@ -147,9 +171,10 @@ public class ApiTest {
     @Test
     public void findWinnerFromTransformersBattleWithLessThan2Ids()
 	    throws Exception {
-	String[] ids = new String[] { "12","4" };
+	String[] ids = new String[] { "12", "4" };
 	mockMvc.perform(MockMvcRequestBuilders.post("/getBattleResult")
-		.content(asJsonString(ids)).contentType(MediaType.APPLICATION_JSON)
+		.content(asJsonString(ids))
+		.contentType(MediaType.APPLICATION_JSON)
 		.accept(MediaType.APPLICATION_JSON))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.content.Error")
 			.value("2 or more valid ids required"));

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Component;
 
 import com.transformers.exceptions.TransformerNotFoundException;
@@ -28,16 +30,16 @@ public class TransformerService {
 	return repository.findAll();
     }
 
-    public Transformer createTransformer(Transformer transformer) {
+    public Transformer createTransformer(@Valid Transformer transformer) {
 	return repository.save(transformer);
     }
 
-    public Transformer findById(Integer id) {
+    public Transformer findById(Integer id) throws TransformerNotFoundException {
 	return repository.findById(id)
 		.orElseThrow(() -> new TransformerNotFoundException(id));
     }
 
-    public Transformer updateOrCreateTransformer(Transformer newTransformer,
+    public Transformer updateOrCreateTransformer(@Valid Transformer newTransformer,
 	    Integer id) {
 	return repository.findById(id).map((Transformer transformer) -> {
 	    transformer.setStrength(newTransformer.getStrength());

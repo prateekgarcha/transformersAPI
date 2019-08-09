@@ -61,7 +61,6 @@ public class ServiceUnitTests {
     public void checkIfTransformerIsGettingSavedOrNot() {
 	Transformer transformer = new Transformer(1, "Optimus Prime", 10, 9, 10, 9,
 		1, 9, 9, 10, Transformer.TYPE.AUTOBOT);
-	when(repository.save(any(Transformer.class))).thenReturn(transformer);
 	Transformer savedTransformer = service.createTransformer(transformer);
 	assertEquals("Optimus Prime", savedTransformer.getName());
     }
@@ -70,11 +69,11 @@ public class ServiceUnitTests {
     public void updateAlreadySavedTransformer() {
 	Transformer savedTransformer = initialize();
 	savedTransformer.setName("New Name");
-	savedTransformer.setRank(99);
-	savedTransformer = service.updateOrCreateTransformer(savedTransformer,
+	savedTransformer.setRank(9);
+	Transformer newT = service.updateOrCreateTransformer(savedTransformer,
 		savedTransformer.getId());
-	assertEquals("New Name", savedTransformer.getName());
-	assertEquals(99, savedTransformer.getRank());
+	assertEquals("New Name", newT.getName());
+	assertEquals(9, newT.getRank());
     }
 
     @Test

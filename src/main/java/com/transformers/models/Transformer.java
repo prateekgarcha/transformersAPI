@@ -3,6 +3,10 @@ package com.transformers.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,15 +27,15 @@ public class Transformer {
     }
 
     private @Id @GeneratedValue @Setter(AccessLevel.NONE) int id;
-    private String name;
-    private int strength;
-    private int intelligence;
-    private int speed;
-    private int endurance;
-    private int rank;
-    private int courage;
-    private int firepower;
-    private int skill;
+    private @Size(min = 1) @NotBlank String name;
+    private @Min(1) @Max(10) int strength;
+    private @Min(1) @Max(10) int intelligence;
+    private @Min(1) @Max(10) int speed;
+    private @Min(1) @Max(10) int endurance;
+    private @Min(1) @Max(10) int rank;
+    private @Min(1) @Max(10) int courage;
+    private @Min(1) @Max(10) int firepower;
+    private @Min(1) @Max(10) int skill;
     private TYPE type;
 
     public int getOverallRating() {
